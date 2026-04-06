@@ -1,0 +1,7 @@
+/* src/index.css */
+@import "tailwindcss";
+
+/* Keep your custom body styles if you want */
+body {
+  @apply bg-[#F0F2F5] min-h-screen font-sans;
+}
