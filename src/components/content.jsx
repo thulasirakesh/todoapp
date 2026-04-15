@@ -5,20 +5,31 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Mock from '../mock.json'
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {toggleTask} from "../feature/todoSlice"
 
 export default function Content () {
     const [button, setButton] = useState("All");
+    const {tasks} = useSelector((state) => state.todo)
+    const dispatch = useDispatch();
+    const filteredTask = tasks?.filter(task => {
+        if (button === "Active") return task.status === "Active";
+        if (button === "Completed") return task.status === "Completed";
+        return true
+    })
+    const tasksLength = filteredTask?.length;
     return (
       <>
         <div>
-          <h4 className="text-2xl font-serif">My Tasks</h4>
+          <h4 className="text-2xl font-serif">{tasksLength > 0 ? "Active Tasks" : "No Tasks Available"}</h4>
         </div>
-        {Mock.map((user) => (
+        {(tasksLength > 0) && filteredTask?.map((user) => (
           <div className="mt-1 mb-4 p-2 rounded-2xl shadow-xl h-15 bg-[#FFF5EE] flex items-center justify-start">
             <FormGroup>
               <FormControlLabel
-                control={<Checkbox checked ={user.status === "Complete"} color="success" />}
-                label={user.taskname}
+                control={<Checkbox checked = {user.status === "Completed"} color="success" />}
+                label={user.taskName}
+                onChange={() => dispatch(toggleTask(user.id))}
                 sx={{
                   ".MuiFormControlLabel-label": {
                     fontFamily: "font-serif",
